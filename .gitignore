@@ -4,3 +4,4 @@ obj
 project.lock.json
 y.output
 TestResult.xml
+.vs/

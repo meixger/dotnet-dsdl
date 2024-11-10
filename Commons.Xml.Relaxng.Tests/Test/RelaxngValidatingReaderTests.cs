@@ -20,9 +20,11 @@ namespace MonoTests.Commons.Xml.Relaxng
 	[TestFixture]
 	public class RelaxngValidatingReaderTests
 	{
-		RelaxngValidatingReader reader;
+#pragma warning disable NUnit1032
+        RelaxngValidatingReader reader;
+#pragma warning restore NUnit1032
 
-		[SetUp]
+        [SetUp]
 		public void SetUp ()
 		{
 		}
