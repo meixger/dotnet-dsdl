@@ -45,6 +45,7 @@ public class Tests
         using var textStreamReader = new StreamReader(resourceStream);
         using var xmlReader = XmlReader.Create(textStreamReader);
         var pattern = RelaxngPattern.Read(xmlReader);
+        // need to patch duplicate code attribute in error element of OTA_NotifReportRS
         pattern.Compile();
         return pattern;
     }
