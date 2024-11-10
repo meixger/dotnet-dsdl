@@ -1,9 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
+    <VersionPrefix>0.0.1-pre</VersionPrefix>
+	<Authors>github.com/meixger,github.com/atsushieno</Authors>
+	<RepositoryUrl>https://github.com/meixger/dotnet-dsdl</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

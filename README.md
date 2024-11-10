@@ -6,7 +6,7 @@ of schema languages for XML documents.
 Seealso: https://en.wikipedia.org/wiki/Document_Schema_Definition_Languages
 
 It was originally developed within the Mono Project. It is rewritten to
-become as modern as .NET generics and .NET Standard 1.3.
+become as modern as .NET generics and .NET Standard ~~1.3.~~ 2.0 and 2.1.
 
 ## Porting TODO
 
