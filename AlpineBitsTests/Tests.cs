@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Commons.Xml.Relaxng;
 using System.Reflection;
 using System.Text;
@@ -36,6 +37,47 @@ public class Tests
                                         });
         Console.WriteLine(ex.Message);
         Assert.That(ex.Message, Is.EqualTo("Invalid start tag closing found. LocalName = Warning, NS = http://www.opentravel.org/OTA/2003/05. line 8, column 10"));
+    }
+
+    [Test]
+
+    public void ConcurrencyTest()
+    {
+        // all tests can fail because of parallel execution
+        // RelaxngPattern is not thread safe
+        // even creating a new instance of RelaxngPattern is not thread safe
+        // a lock is needed
+        var request = OtaPingRs;
+        var assembly = Assembly.GetExecutingAssembly();
+        var resourceStream = assembly.GetManifestResourceStream("alpinebits.rng");
+        var rng = new StreamReader(resourceStream).ReadToEnd();
+        Exception? error = null;
+        Parallel.ForEach(Enumerable.Range(0, 1000), new ParallelOptions { MaxDegreeOfParallelism = 100 }, (s) =>
+                                                                              {
+                                                                                  // not thread safe
+                                                                                  // even creating a new instance of RelaxngPattern is not thread safe
+                                                                                  // lock (rng)
+                                                                                  {
+                                                                                      using var xmlReader = XmlReader.Create(new StringReader(rng));
+                                                                                      var localPattern = RelaxngPattern.Read(xmlReader);
+                                                                                      localPattern.Compile();
+                                                                                      {
+                                                                                          using var vr = new RelaxngValidatingReader(new XmlTextReader(new MemoryStream(Encoding.UTF8.GetBytes(request))), localPattern);
+                                                                                          try
+                                                                                          {
+                                                                                              while (!vr.EOF) vr.Read();
+                                                                                          }
+                                                                                          catch (Exception e)
+                                                                                          {
+                                                                                              Console.WriteLine(e.Message);
+                                                                                              error = e;
+                                                                                              throw;
+                                                                                          }
+                                                                                      }
+                                                                                  }
+                                                                              });
+        Assert.That(error, Is.Null);
+        Console.WriteLine(error?.Message);
     }
 
     private RelaxngPattern ParseAndCompileAlpineBits()
